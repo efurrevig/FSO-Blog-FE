@@ -3,6 +3,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -47,6 +48,7 @@ const App = (props) => {
     }
   }
 
+
   return (
     <div>
 
@@ -65,7 +67,9 @@ const App = (props) => {
           <Blog key={blog.id} blog={blog} />  
         )}
       </ul>
-
+      {
+        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} />
+      }
     </div>
   );
 }
