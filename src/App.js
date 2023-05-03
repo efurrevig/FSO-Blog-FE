@@ -48,11 +48,24 @@ const App = (props) => {
     }
   }
 
+  const handleLogout = () => {
+    setUser(null)
+    blogService.setToken(null)
+    window.localStorage.removeItem('loggedBlogAppUser')
+  }
+
 
   return (
     <div>
 
       <h1>Blogs</h1>
+      {
+        user !== null &&
+        <div>
+          logged in as: {user.username}
+          <button onClick={handleLogout}>logout</button>
+        </div>
+      }
       {
         user === null && <LoginForm 
                             handleLogin={handleLogin} 
@@ -68,8 +81,9 @@ const App = (props) => {
         )}
       </ul>
       {
-        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} />
+        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} /> 
       }
+
     </div>
   );
 }
