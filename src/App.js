@@ -4,6 +4,7 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -43,8 +44,8 @@ const App = (props) => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch {
-      console.log('login failure')
+    } catch (error) {
+      setErrorMessage(error.response.data.error)
     }
   }
 
@@ -59,6 +60,10 @@ const App = (props) => {
     <div>
 
       <h1>Blogs</h1>
+
+      <Notification message={errorMessage} messageType='error' />
+      <Notification message={successMessage} messageType='success' />
+
       {
         user !== null &&
         <div>
