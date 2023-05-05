@@ -107,11 +107,9 @@ const App = (props) => {
             />
           </Togglable>
       }
-      <ul>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />  
-        )}
-      </ul>
+      {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+      )}
       {
         user !== null &&
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
