@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -64,6 +65,7 @@ const App = (props) => {
 
   const handleSuccess = (message) => {
     setSuccessMessage(message)
+    blogFormRef.current.toggleVisibility()
     setTimeout(() => {
       setSuccessMessage(null)
     }, 5000)
@@ -75,6 +77,8 @@ const App = (props) => {
       setErrorMessage(null)
     }, 5000)
   }
+
+  const blogFormRef = useRef()
 
   return (
     <div>
@@ -92,13 +96,16 @@ const App = (props) => {
         </div>
       }
       {
-        user === null && <LoginForm 
-                            handleLogin={handleLogin} 
-                            username={username} 
-                            setUsername={setUsername} 
-                            password={password} 
-                            setPassword={setPassword} 
-                          />
+        user === null && 
+          <Togglable buttonLabel='login'>
+            <LoginForm 
+              handleLogin={handleLogin} 
+              username={username} 
+              setUsername={setUsername} 
+              password={password} 
+              setPassword={setPassword} 
+            />
+          </Togglable>
       }
       <ul>
         {blogs.map(blog =>
@@ -106,7 +113,10 @@ const App = (props) => {
         )}
       </ul>
       {
-        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} handleSuccess={handleSuccess} handleFailure={handleFailure} /> 
+        user !== null &&
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+          <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} handleSuccess={handleSuccess} handleFailure={handleFailure} />
+        </Togglable>
       }
 
     </div>
