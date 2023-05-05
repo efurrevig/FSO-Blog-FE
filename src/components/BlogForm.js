@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ user, blogs, setBlogs }) => {
+const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -21,10 +21,13 @@ const BlogForm = ({ user, blogs, setBlogs }) => {
             setTitle('')
             setAuthor('')
             setUrl('')
+            handleSuccess(`${addedBlog.title} successfully added`)
         } catch (error) {
+            handleFailure(error.response.data.error)
             console.log(error)
         }
     }
+
 
     return (
         <form onSubmit={addBlog}>

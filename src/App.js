@@ -44,8 +44,15 @@ const App = (props) => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setSuccessMessage('Successfully logged in')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      },5000)
     } catch (error) {
       setErrorMessage(error.response.data.error)
+      setTimeout(() =>  {
+        setErrorMessage(null)
+      },5000)
     }
   }
 
@@ -55,6 +62,19 @@ const App = (props) => {
     window.localStorage.removeItem('loggedBlogAppUser')
   }
 
+  const handleSuccess = (message) => {
+    setSuccessMessage(message)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+
+  const handleFailure = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   return (
     <div>
@@ -86,7 +106,7 @@ const App = (props) => {
         )}
       </ul>
       {
-        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} /> 
+        user !== null && <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} handleSuccess={handleSuccess} handleFailure={handleFailure} /> 
       }
 
     </div>
