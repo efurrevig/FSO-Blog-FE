@@ -17,6 +17,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
 
         try {
             const addedBlog = await blogService.create(blogObject)
+            addedBlog.user = { username: user.username, name: user.name }
             setBlogs(blogs.concat(addedBlog))
             setTitle('')
             setAuthor('')

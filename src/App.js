@@ -19,7 +19,7 @@ const App = (props) => {
     blogService
       .getAll()
       .then(initialBlogs => {
-        setBlogs(initialBlogs)
+        setBlogs(initialBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
       })
   }, [])
 
@@ -108,7 +108,7 @@ const App = (props) => {
           </Togglable>
       }
       {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
       )}
       {
         user !== null &&
