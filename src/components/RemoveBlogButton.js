@@ -1,4 +1,4 @@
-import blogService from "../services/blogs";
+import blogService from '../services/blogs'
 
 const RemoveBlogButton = ({ blog, blogs, setBlogs }) => {
     const removeBlogById = (id, arr) => {

@@ -8,7 +8,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
 
     const addBlog = async (event) => {
         event.preventDefault()
-        
+
         const blogObject = {
             title: title,
             author: author,

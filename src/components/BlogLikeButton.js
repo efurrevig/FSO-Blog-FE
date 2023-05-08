@@ -1,4 +1,4 @@
-import blogService from "../services/blogs"
+import blogService from '../services/blogs'
 
 const BlogLikeButton = ({ blog, blogs, setBlogs }) => {
 
@@ -26,13 +26,13 @@ const BlogLikeButton = ({ blog, blogs, setBlogs }) => {
         }
 
         try {
-            const returnedBlog = await blogService.edit(newBlog, blog.id)
+            await blogService.edit(newBlog, blog.id)
             const newBlogList = replaceBlogById(blog.id, blogs)
             setBlogs(newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes))
         } catch (error) {
             console.log(error)
         }
-        
+
     }
     return (
         <button onClick={handleSubmit}>like</button>
