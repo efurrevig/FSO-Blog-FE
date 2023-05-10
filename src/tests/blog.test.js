@@ -5,27 +5,27 @@ import userEvent from '@testing-library/user-event'
 import Blog from '../components/Blog'
 
 
-describe('<Blog />', () => {
+const blog = {
+    title: 'testing...',
+    author: 'test author',
+    url: 'test.com',
+    likes: 1,
+    user: { username: 'root', name: 'John Smith' }
+}
+
+describe('<Blog /> before show button is clicked', () => {
 
     let container
 
-    const blog = {
-        title: 'testing...',
-        author: 'test author',
-        url: 'test.com',
-        likes: 1,
-        user: { username: 'root', name: 'John Smith' }
-    }
     beforeEach(() => {
-        const mockSetBlogs = jest.fn()
+        const mockHandleLike = jest.fn()
+        const mockHandleDelete = jest.fn()
         container = render(
-            <Blog blog={blog} blogs={[]} setBlogs={mockSetBlogs} />
+            <Blog blog={blog} handleLikeSubmit={mockHandleLike} handleDeleteBlog={mockHandleDelete} />
         ).container
     })
 
     test('renders only blog title initially', () => {
-
-
         const element = screen.getByText('testing...')
         expect(element).toBeDefined()
         const urlElement = screen.getByText('URL: test.com')
@@ -42,5 +42,35 @@ describe('<Blog />', () => {
         const urlElement = screen.getByText('URL: test.com')
         expect(urlElement).toBeDefined()
 
+    })
+
+})
+
+describe('<Blog /> after show button is clicked, like and delete buttons', () => {
+
+    let container
+    let handleLikeSubmit
+    let handleDeleteBlog
+    let user
+    let button
+
+    beforeEach(async () => {
+        handleLikeSubmit = jest.fn()
+        handleDeleteBlog = jest.fn()
+        container = render(
+            <Blog blog={blog} handleLikeSubmit={handleLikeSubmit} handleDeleteBlog={handleDeleteBlog} />
+        ).container
+
+        user = userEvent.setup()
+        button = container.querySelector('.toggleButton')
+        await user.click(button)
+    })
+
+    test('when like button is clicked the event handler is called with proper blog object', async () => {
+        button = screen.getByTestId('Like')
+        await user.click(button)
+        await user.click(button)
+
+        expect(handleLikeSubmit).toHaveBeenCalledWith(blog)
     })
 })
