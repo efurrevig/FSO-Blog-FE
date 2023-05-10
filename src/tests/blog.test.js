@@ -28,14 +28,19 @@ describe('<Blog />', () => {
 
         const element = screen.getByText('testing...')
         expect(element).toBeDefined()
-        const undefElement = screen.queryByText('test.com')
-        expect(undefElement).toBeNull()
+        const urlElement = screen.getByText('URL: test.com')
+        expect(urlElement).toBeDefined()
     })
 
     test('renders all blog info when show button is clicked', async () => {
         const user = userEvent.setup()
         const button = container.querySelector('.toggleButton')
         await user.click(button)
+
+        const likesElement = screen.getByText('Likes: 1')
+        expect(likesElement).toBeDefined()
+        const urlElement = screen.getByText('URL: test.com')
+        expect(urlElement).toBeDefined()
 
     })
 })

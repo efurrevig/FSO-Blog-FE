@@ -32,6 +32,67 @@ const App = () => {
         }
     }, [])
 
+    const createBlog = async (blogObject) => {
+        blogFormRef.current.toggleVisibility()
+        try {
+            const newBlog = await blogService.create(blogObject)
+            newBlog.user = { username: user.username, name: user.name }
+            setBlogs(blogs.concat(newBlog))
+            handleSuccess(`${newBlog.title} successfully added`)
+        } catch (error) {
+            handleFailure(error.response.data.error)
+            console.log(error)
+            console.log(blogObject)
+        }
+    }
+
+    const replaceBlogById = (id, arr) => {
+        const updatedBlogs = arr.map((b) => {
+            if (b.id === id) {
+                return {
+                    ...b,
+                    likes: b.likes + 1
+                }
+            } else {
+                return b
+            }
+        })
+        return updatedBlogs
+    }
+
+    const likeBlog = async (blogObject) => {
+        const newBlog = {
+            title: blogObject.title,
+            author: blogObject.author,
+            url: blogObject.url,
+            likes: blogObject.likes + 1,
+            user: blogObject.user.id
+        }
+
+        try {
+            await blogService.edit(newBlog, blogObject.id)
+            const newBlogList = replaceBlogById(blogObject.id, blogs)
+            setBlogs(newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes))
+        } catch(error) {
+            handleFailure(error.response.data.error)
+        }
+    }
+
+    const deleteBlog = async (blogObject) => {
+        if (!window.confirm(`Are you sure you want to delete ${blogObject.title}?`)) {
+            return
+        }
+        try {
+            blogService.destroy(blogObject.id)
+            setBlogs(blogs.filter((b) => b.id !== blogObject.id))
+            handleSuccess(`${blogObject.title} successfully removed`)
+        } catch (error) {
+            handleFailure(error.response.data.error)
+            console.log(error)
+        }
+    }
+
+
     const handleLogin = async (event) => {
         event.preventDefault()
 
@@ -65,7 +126,6 @@ const App = () => {
 
     const handleSuccess = (message) => {
         setSuccessMessage(message)
-        blogFormRef.current.toggleVisibility()
         setTimeout(() => {
             setSuccessMessage(null)
         }, 5000)
@@ -108,12 +168,12 @@ const App = () => {
                   </Togglable>
             }
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
+                <Blog key={blog.id} blog={blog} handleLikeSubmit={likeBlog} handleDeleteBlog={deleteBlog} />
             )}
             {
                 user !== null &&
                 <Togglable buttonLabel='new blog' ref={blogFormRef}>
-                    <BlogForm user={user} blogs={blogs} setBlogs={setBlogs} handleSuccess={handleSuccess} handleFailure={handleFailure} />
+                    <BlogForm createBlog={createBlog} />
                 </Togglable>
             }
 

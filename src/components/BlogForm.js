@@ -1,33 +1,23 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
+const BlogForm = ({ createBlog }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
-    const addBlog = async (event) => {
+    const addBlog = (event) => {
         event.preventDefault()
 
-        const blogObject = {
+        createBlog({
             title: title,
             author: author,
             url: url
-        }
+        })
 
-        try {
-            const addedBlog = await blogService.create(blogObject)
-            addedBlog.user = { username: user.username, name: user.name }
-            setBlogs(blogs.concat(addedBlog))
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-            handleSuccess(`${addedBlog.title} successfully added`)
-        } catch (error) {
-            handleFailure(error.response.data.error)
-            console.log(error)
-        }
+        setTitle('')
+        setAuthor('')
+        setUrl('')
     }
 
 
@@ -36,6 +26,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
             <div>
                 Title:
                 <input
+                    data-testid='title'
                     type='text'
                     value={title}
                     name='title'
@@ -45,6 +36,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
             <div>
                 Author:
                 <input
+                    data-testid='author'
                     type='text'
                     value={author}
                     name='author'
@@ -54,6 +46,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
             <div>
                 URL:
                 <input
+                    data-testid='url'
                     type='text'
                     value={url}
                     name='url'
@@ -66,11 +59,7 @@ const BlogForm = ({ user, blogs, setBlogs, handleSuccess, handleFailure }) => {
 }
 
 BlogForm.propTypes = {
-    user: PropTypes.string.isRequired,
-    blogs: PropTypes.array.isRequired,
-    setBlogs: PropTypes.func.isRequired,
-    handleSuccess: PropTypes.func.isRequired,
-    handleFailure: PropTypes.func.isRequired
+    createBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm
