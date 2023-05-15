@@ -28,11 +28,11 @@ const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
             <div style={showWhenVisible} className='toggledBlogContent'>
                 <p>Author: {blog.author}</p>
                 <p>URL: {blog.url}</p>
-                <p>Likes: {blog.likes}</p>
+                <p>Likes: <span id='like-count'>{blog.likes}</span></p>
                 <p>Added by: {blog.user.name}</p>
                 <BlogButton buttonText='Like' handleSubmit={() => handleLikeSubmit(blog)} />
                 <div>
-                    <BlogButton buttonText='Remove Blog' handleSubmit={() => handleDeleteBlog(blog)} />
+                    <BlogButton buttonText='Remove' handleSubmit={() => handleDeleteBlog(blog)} />
                 </div>
             </div>
         </div>

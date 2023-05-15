@@ -1,6 +1,6 @@
 const BlogLikeButton = ({ buttonText, handleSubmit }) => {
     return (
-        <button data-testid={buttonText} onClick={handleSubmit}>{buttonText}</button>
+        <button data-testid={buttonText} id={`${buttonText}-button`} onClick={handleSubmit}>{buttonText}</button>
     )
 }
 

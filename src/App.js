@@ -83,7 +83,7 @@ const App = () => {
             return
         }
         try {
-            blogService.destroy(blogObject.id)
+            await blogService.destroy(blogObject.id)
             setBlogs(blogs.filter((b) => b.id !== blogObject.id))
             handleSuccess(`${blogObject.title} successfully removed`)
         } catch (error) {
@@ -167,9 +167,11 @@ const App = () => {
                       />
                   </Togglable>
             }
-            {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} handleLikeSubmit={likeBlog} handleDeleteBlog={deleteBlog} />
-            )}
+            <div id='blog-container'>
+                {blogs.map(blog =>
+                    <Blog key={blog.id} blog={blog} handleLikeSubmit={likeBlog} handleDeleteBlog={deleteBlog} />
+                )}
+            </div>
             {
                 user !== null &&
                 <Togglable buttonLabel='new blog' ref={blogFormRef}>
