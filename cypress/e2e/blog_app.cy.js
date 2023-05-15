@@ -113,13 +113,37 @@ describe('Blog App', () => {
                 cy.createBlog({ title: 'Cypress one', author: 'Cypress', url: 'docs.cypress.io' })
                 cy.createBlog({ title: 'Cypress two', author: 'Super', url: 'supersuper.com' })
                 cy.createBlog({ title: 'Cypress three', author: 'Duper', url: 'duperduper.com' })
-
+                cy.wait(1000)
                 cy.visit('')
             })
 
             it('A blog can be expanded', function() {
                 cy.get('#blog-container').contains('Cypress one').contains('show').click()
 
+            })
+
+            it.only('blogs are sorted desc by likes', function() {
+                cy.get('#blog-container').as('blogs')
+                cy.get('@blogs').get('.blog').eq(0).should('contain', 'Cypress one').as('blog1')
+                cy.get('@blogs').get('.blog').eq(1).should('contain', 'Cypress two').as('blog2')
+                cy.get('@blogs').get('.blog').eq(2).should('contain', 'Cypress three').as('blog3')
+                cy.get('@blog3').contains('show').click()
+                cy.get('@blog2').contains('show').click()
+                cy.get('@blog1').contains('show').click()
+
+                cy.get('@blog3').find('#Like-button').click()
+                cy.wait(500)
+                cy.get('@blog3').find('#Like-button').click()
+                cy.wait(500)
+                cy.get('@blog3').find('#Like-button').click()
+                cy.wait(500)
+                cy.get('@blog2').find('#Like-button').click()
+                cy.wait(500)
+                cy.get('@blog2').find('#Like-button').click()
+                cy.wait(500)
+
+                cy.get('@blogs').get('.blog').eq(0).should('contain', 'Cypress three').and('contain', 'Likes: 3')
+                cy.get('@blogs').get('.blog').eq(1).should('contain', 'Cypress two').and('contain', 'Likes: 2')
             })
 
             describe('When the creator is logged in', function() {
