@@ -16,11 +16,11 @@ const App = () => {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        blogService
-            .getAll()
-            .then(initialBlogs => {
-                setBlogs(initialBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
-            })
+        blogService.getAll().then((initialBlogs) => {
+            setBlogs(
+                initialBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
+            )
+        })
     }, [])
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const App = () => {
             if (b.id === id) {
                 return {
                     ...b,
-                    likes: b.likes + 1
+                    likes: b.likes + 1,
                 }
             } else {
                 return b
@@ -66,20 +66,26 @@ const App = () => {
             author: blogObject.author,
             url: blogObject.url,
             likes: blogObject.likes + 1,
-            user: blogObject.user.id
+            user: blogObject.user.id,
         }
 
         try {
             await blogService.edit(newBlog, blogObject.id)
             const newBlogList = replaceBlogById(blogObject.id, blogs)
-            setBlogs(newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes))
-        } catch(error) {
+            setBlogs(
+                newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes)
+            )
+        } catch (error) {
             handleFailure(error.response.data.error)
         }
     }
 
     const deleteBlog = async (blogObject) => {
-        if (!window.confirm(`Are you sure you want to delete ${blogObject.title}?`)) {
+        if (
+            !window.confirm(
+                `Are you sure you want to delete ${blogObject.title}?`
+            )
+        ) {
             return
         }
         try {
@@ -92,16 +98,15 @@ const App = () => {
         }
     }
 
-
     const handleLogin = async (event) => {
         event.preventDefault()
 
         try {
-            const user = await loginService
-                .login({ username, password })
+            const user = await loginService.login({ username, password })
             blogService.setToken(user.token)
             window.localStorage.setItem(
-                'loggedBlogAppUser', JSON.stringify(user)
+                'loggedBlogAppUser',
+                JSON.stringify(user)
             )
             setUser(user)
             setUsername('')
@@ -109,12 +114,12 @@ const App = () => {
             setSuccessMessage('Successfully logged in')
             setTimeout(() => {
                 setSuccessMessage(null)
-            },5000)
+            }, 5000)
         } catch (error) {
             setErrorMessage(error.response.data.error)
-            setTimeout(() =>  {
+            setTimeout(() => {
                 setErrorMessage(null)
-            },5000)
+            }, 5000)
         }
     }
 
@@ -142,43 +147,43 @@ const App = () => {
 
     return (
         <div>
-
             <h1>Blogs</h1>
 
-            <Notification message={errorMessage} messageType='error' />
-            <Notification message={successMessage} messageType='success' />
+            <Notification message={errorMessage} messageType="error" />
+            <Notification message={successMessage} messageType="success" />
 
-            {
-                user !== null &&
+            {user !== null && (
                 <div>
-                  logged in as: {user.username}
+                    logged in as: {user.username}
                     <button onClick={handleLogout}>logout</button>
                 </div>
-            }
-            {
-                user === null &&
-                  <Togglable buttonLabel='login'>
-                      <LoginForm
-                          handleLogin={handleLogin}
-                          username={username}
-                          setUsername={setUsername}
-                          password={password}
-                          setPassword={setPassword}
-                      />
-                  </Togglable>
-            }
-            <div id='blog-container'>
-                {blogs.map(blog =>
-                    <Blog key={blog.id} blog={blog} handleLikeSubmit={likeBlog} handleDeleteBlog={deleteBlog} />
-                )}
+            )}
+            {user === null && (
+                <Togglable buttonLabel="login">
+                    <LoginForm
+                        handleLogin={handleLogin}
+                        username={username}
+                        setUsername={setUsername}
+                        password={password}
+                        setPassword={setPassword}
+                    />
+                </Togglable>
+            )}
+            <div id="blog-container">
+                {blogs.map((blog) => (
+                    <Blog
+                        key={blog.id}
+                        blog={blog}
+                        handleLikeSubmit={likeBlog}
+                        handleDeleteBlog={deleteBlog}
+                    />
+                ))}
             </div>
-            {
-                user !== null &&
-                <Togglable buttonLabel='new blog' ref={blogFormRef}>
+            {user !== null && (
+                <Togglable buttonLabel="new blog" ref={blogFormRef}>
                     <BlogForm createBlog={createBlog} />
                 </Togglable>
-            }
-
+            )}
         </div>
     )
 }

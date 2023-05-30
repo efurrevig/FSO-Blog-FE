@@ -16,23 +16,33 @@ const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
         border: 'solid',
         borderWidth: 1,
         marginBottom: 1,
-        maxWidth: 500
+        maxWidth: 500,
     }
 
     return (
-        <div className='blog' style={blogStyle}>
+        <div className="blog" style={blogStyle}>
             <div>
                 {blog.title}
-                <button onClick={toggleVisibility} className='toggleButton'>{visible ? 'hide' : 'show'}</button>
+                <button onClick={toggleVisibility} className="toggleButton">
+                    {visible ? 'hide' : 'show'}
+                </button>
             </div>
-            <div style={showWhenVisible} className='toggledBlogContent'>
+            <div style={showWhenVisible} className="toggledBlogContent">
                 <p>Author: {blog.author}</p>
                 <p>URL: {blog.url}</p>
-                <p>Likes: <span id='like-count'>{blog.likes}</span></p>
+                <p>
+                    Likes: <span id="like-count">{blog.likes}</span>
+                </p>
                 <p>Added by: {blog.user.name}</p>
-                <BlogButton buttonText='Like' handleSubmit={() => handleLikeSubmit(blog)} />
+                <BlogButton
+                    buttonText="Like"
+                    handleSubmit={() => handleLikeSubmit(blog)}
+                />
                 <div>
-                    <BlogButton buttonText='Remove' handleSubmit={() => handleDeleteBlog(blog)} />
+                    <BlogButton
+                        buttonText="Remove"
+                        handleSubmit={() => handleDeleteBlog(blog)}
+                    />
                 </div>
             </div>
         </div>

@@ -26,8 +26,9 @@
 
 Cypress.Commands.add('login', ({ username, password }) => {
     cy.request('POST', 'http://localhost:3001/api/login', {
-        username, password
-    }).then(response => {
+        username,
+        password,
+    }).then((response) => {
         localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
         cy.visit('')
     })
@@ -39,7 +40,9 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
         method: 'POST',
         body: { title, author, url },
         headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('loggedBlogAppUser')).token}`
-        }
+            Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem('loggedBlogAppUser')).token
+            }`,
+        },
     })
 })

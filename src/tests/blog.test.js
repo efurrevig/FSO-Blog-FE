@@ -4,24 +4,26 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from '../components/Blog'
 
-
 const blog = {
     title: 'testing...',
     author: 'test author',
     url: 'test.com',
     likes: 1,
-    user: { username: 'root', name: 'John Smith' }
+    user: { username: 'root', name: 'John Smith' },
 }
 
 describe('<Blog /> before show button is clicked', () => {
-
     let container
 
     beforeEach(() => {
         const mockHandleLike = jest.fn()
         const mockHandleDelete = jest.fn()
         container = render(
-            <Blog blog={blog} handleLikeSubmit={mockHandleLike} handleDeleteBlog={mockHandleDelete} />
+            <Blog
+                blog={blog}
+                handleLikeSubmit={mockHandleLike}
+                handleDeleteBlog={mockHandleDelete}
+            />
         ).container
     })
 
@@ -41,13 +43,10 @@ describe('<Blog /> before show button is clicked', () => {
         expect(likesElement).toBeDefined()
         const urlElement = screen.getByText('URL: test.com')
         expect(urlElement).toBeDefined()
-
     })
-
 })
 
 describe('<Blog /> after show button is clicked, like and delete buttons', () => {
-
     let container
     let handleLikeSubmit
     let handleDeleteBlog
@@ -58,7 +57,11 @@ describe('<Blog /> after show button is clicked, like and delete buttons', () =>
         handleLikeSubmit = jest.fn()
         handleDeleteBlog = jest.fn()
         container = render(
-            <Blog blog={blog} handleLikeSubmit={handleLikeSubmit} handleDeleteBlog={handleDeleteBlog} />
+            <Blog
+                blog={blog}
+                handleLikeSubmit={handleLikeSubmit}
+                handleDeleteBlog={handleDeleteBlog}
+            />
         ).container
 
         user = userEvent.setup()
