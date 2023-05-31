@@ -6,6 +6,8 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { initializeBlogs } from './reducers/blogReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -15,12 +17,10 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        blogService.getAll().then((initialBlogs) => {
-            setBlogs(
-                initialBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
-            )
-        })
+        dispatch(initializeBlogs())
     }, [])
 
     useEffect(() => {
