@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BlogButton from './BlogButton'
 import { useDispatch } from 'react-redux'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog }) => {
     const [visible, setVisible] = useState(false)
@@ -17,8 +17,14 @@ const Blog = ({ blog }) => {
         dispatch(likeBlog(blog))
     }
 
-    const handleDeleteBlog = () => {
+    const handleDeleteBlog = (blog) => {
         console.log('deleted')
+        if (!window.confirm(
+            `Are you sure you want to delete ${blog.title}?`
+        )) {
+            return
+        }
+        dispatch(deleteBlog(blog.id))
     }
 
     const blogStyle = {
