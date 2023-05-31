@@ -7,16 +7,37 @@ const blogSlice = createSlice({
     reducers: {
         setBlogs(state, action) {
             return action.payload
+        },
+        changeBlog(state, action) {
+            const id = action.payload.id
+            const changedBlog = action.payload
+            return state.map(b => b.id !== id ? b : changedBlog)
         }
     }
 })
 
-export const { setBlogs } = blogSlice.actions
+export const { setBlogs, changeBlog } = blogSlice.actions
 
 export const initializeBlogs = () => {
     return async dispatch => {
         const blogs = await blogService.getAll()
-        dispatch(setBlogs(blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)))
+        console.log(blogs)
+        dispatch(setBlogs(blogs))
+    }
+}
+
+export const likeBlog = (blog) => {
+    const changedBlog = {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1,
+        user: blog.user.id
+    }
+
+    return async dispatch => {
+        const updatedBlog = await blogService.edit(changedBlog, blog.id)
+        dispatch(changeBlog(updatedBlog))
     }
 }
 

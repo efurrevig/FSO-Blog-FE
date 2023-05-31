@@ -1,13 +1,24 @@
 import { useState } from 'react'
 import BlogButton from './BlogButton'
+import { useDispatch } from 'react-redux'
+import { likeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
+const Blog = ({ blog }) => {
     const [visible, setVisible] = useState(false)
-
     const showWhenVisible = { display: visible ? '' : 'none' }
+    const dispatch = useDispatch()
 
     const toggleVisibility = () => {
         setVisible(!visible)
+    }
+
+    const handleLikeSubmit = (blog) => {
+        console.log('liked')
+        dispatch(likeBlog(blog))
+    }
+
+    const handleDeleteBlog = () => {
+        console.log('deleted')
     }
 
     const blogStyle = {

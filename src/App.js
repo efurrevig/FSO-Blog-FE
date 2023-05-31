@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Blog from './components/Blog'
+//import Blog from './components/Blog'
+import Blogs from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -21,7 +22,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(initializeBlogs())
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -46,57 +47,57 @@ const App = () => {
         }
     }
 
-    const replaceBlogById = (id, arr) => {
-        const updatedBlogs = arr.map((b) => {
-            if (b.id === id) {
-                return {
-                    ...b,
-                    likes: b.likes + 1,
-                }
-            } else {
-                return b
-            }
-        })
-        return updatedBlogs
-    }
+    // const replaceBlogById = (id, arr) => {
+    //     const updatedBlogs = arr.map((b) => {
+    //         if (b.id === id) {
+    //             return {
+    //                 ...b,
+    //                 likes: b.likes + 1,
+    //             }
+    //         } else {
+    //             return b
+    //         }
+    //     })
+    //     return updatedBlogs
+    // }
 
-    const likeBlog = async (blogObject) => {
-        const newBlog = {
-            title: blogObject.title,
-            author: blogObject.author,
-            url: blogObject.url,
-            likes: blogObject.likes + 1,
-            user: blogObject.user.id,
-        }
+    // const likeBlog = async (blogObject) => {
+    //     const newBlog = {
+    //         title: blogObject.title,
+    //         author: blogObject.author,
+    //         url: blogObject.url,
+    //         likes: blogObject.likes + 1,
+    //         user: blogObject.user.id,
+    //     }
 
-        try {
-            await blogService.edit(newBlog, blogObject.id)
-            const newBlogList = replaceBlogById(blogObject.id, blogs)
-            setBlogs(
-                newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes)
-            )
-        } catch (error) {
-            handleFailure(error.response.data.error)
-        }
-    }
+    //     try {
+    //         await blogService.edit(newBlog, blogObject.id)
+    //         const newBlogList = replaceBlogById(blogObject.id, blogs)
+    //         setBlogs(
+    //             newBlogList.sort((blog1, blog2) => blog2.likes - blog1.likes)
+    //         )
+    //     } catch (error) {
+    //         handleFailure(error.response.data.error)
+    //     }
+    // }
 
-    const deleteBlog = async (blogObject) => {
-        if (
-            !window.confirm(
-                `Are you sure you want to delete ${blogObject.title}?`
-            )
-        ) {
-            return
-        }
-        try {
-            await blogService.destroy(blogObject.id)
-            setBlogs(blogs.filter((b) => b.id !== blogObject.id))
-            handleSuccess(`${blogObject.title} successfully removed`)
-        } catch (error) {
-            handleFailure(error.response.data.error)
-            console.log(error)
-        }
-    }
+    // const deleteBlog = async (blogObject) => {
+    //     if (
+    //         !window.confirm(
+    //             `Are you sure you want to delete ${blogObject.title}?`
+    //         )
+    //     ) {
+    //         return
+    //     }
+    //     try {
+    //         await blogService.destroy(blogObject.id)
+    //         setBlogs(blogs.filter((b) => b.id !== blogObject.id))
+    //         handleSuccess(`${blogObject.title} successfully removed`)
+    //     } catch (error) {
+    //         handleFailure(error.response.data.error)
+    //         console.log(error)
+    //     }
+    // }
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -169,7 +170,7 @@ const App = () => {
                     />
                 </Togglable>
             )}
-            <div id="blog-container">
+            {/* <div id="blog-container">
                 {blogs.map((blog) => (
                     <Blog
                         key={blog.id}
@@ -178,7 +179,8 @@ const App = () => {
                         handleDeleteBlog={deleteBlog}
                     />
                 ))}
-            </div>
+            </div> */}
+            <Blogs />
             {user !== null && (
                 <Togglable buttonLabel="new blog" ref={blogFormRef}>
                     <BlogForm createBlog={createBlog} />
