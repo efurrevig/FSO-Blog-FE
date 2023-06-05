@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
-
+import { createNotification } from './notificationReducer'
 const blogSlice = createSlice({
     name: 'blogs',
     initialState: [],
@@ -43,22 +43,38 @@ export const likeBlog = (blog) => {
     }
 
     return async dispatch => {
-        const updatedBlog = await blogService.edit(changedBlog, blog.id)
-        dispatch(changeBlog(updatedBlog))
+        try {
+            const updatedBlog = await blogService.edit(changedBlog, blog.id)
+            dispatch(changeBlog(updatedBlog))
+            dispatch(createNotification('success', `${updatedBlog.title} successfully liked`))
+
+        } catch (error) {
+            dispatch(createNotification('error', error.response.data.error))
+        }
     }
 }
 
 export const deleteBlog = (id) => {
     return async dispatch => {
-        await blogService.destroy(id)
-        dispatch(removeBlog(id))
+        try {
+            await blogService.destroy(id)
+            dispatch(removeBlog(id))
+            dispatch(createNotification('success', 'Blog successfully deleted'))
+        } catch (error ) {
+            dispatch(createNotification('error', error.response.data.error))
+        }
     }
 }
 
 export const createBlog = (blog) => {
     return async dispatch => {
-        await blogService.create(blog)
-        dispatch(appendBlog(blog))
+        try {
+            const createdBlog = await blogService.create(blog)
+            dispatch(appendBlog(createdBlog))
+            dispatch(createNotification('success', `${createdBlog.title} successfully created`))
+        } catch (error) {
+            dispatch(createNotification('error', error.response.data.error))
+        }
     }
 }
 

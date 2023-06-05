@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import Blogs from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-// import Notification from './components/Notification'
+import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -16,7 +16,10 @@ const App = () => {
     const user = useSelector(({ user }) => {
         return user
     })
-
+    const notification = useSelector(({ notification }) => {
+        return notification
+    })
+    console.log('notification', notification)
     useEffect(() => {
         dispatch(initializeBlogs())
         dispatch(initializeUser())
@@ -51,8 +54,7 @@ const App = () => {
         <div>
             <h1>Blogs</h1>
 
-            {/* <Notification message={errorMessage} messageType="error" />
-            <Notification message={successMessage} messageType="success" /> */}
+            <Notification message={notification.message} messageType={notification.type} />
 
             {user !== null && (
                 <div>

@@ -9,8 +9,6 @@ const LoginForm = () => {
     const handleLogin = (event) => {
         event.preventDefault()
         dispatch(loginUser(username, password))
-        setUsername('')
-        setPassword('')
     }
 
     return (
