@@ -1,79 +1,90 @@
-import { useEffect, useRef } from 'react'
-import Blogs from './components/BlogList'
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logoutUser } from './reducers/userReducer'
+import { initializeUserArray } from './reducers/usersReducer'
+import {
+    Routes,
+    Route,
+    useMatch
+} from 'react-router-dom'
+import Users from './components/Users'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import NavBar from './components/NavBar'
+import Home from './components/Home'
+import UserDisplay from './components/UserDisplay'
+import Blog from './components/Blog'
+
 
 const App = () => {
-    // const [errorMessage, setErrorMessage] = useState(null)
-    // const [successMessage, setSuccessMessage] = useState(null)
-
     const dispatch = useDispatch()
     const user = useSelector(({ user }) => {
         return user
     })
+    const users = useSelector(({ users }) => {
+        return users
+    })
+    const blogs = useSelector(({ blogs }) => {
+        return blogs
+    })
+
     const notification = useSelector(({ notification }) => {
         return notification
     })
-    console.log('notification', notification)
+
     useEffect(() => {
         dispatch(initializeBlogs())
         dispatch(initializeUser())
+        dispatch(initializeUserArray())
     }, [dispatch])
 
-    const toggleBlogForm = () => {
-        blogFormRef.current.toggleVisibility()
-
-    }
+    // const toggleBlogForm = () => {
+    //     blogFormRef.current.toggleVisibility()
+    // }
 
     const handleLogout = () => {
         dispatch(logoutUser())
     }
 
-    // const handleSuccess = (message) => {
-    //     setSuccessMessage(message)
-    //     setTimeout(() => {
-    //         setSuccessMessage(null)
-    //     }, 5000)
-    // }
+    // const blogFormRef = useRef()
 
-    // const handleFailure = (message) => {
-    //     setErrorMessage(message)
-    //     setTimeout(() => {
-    //         setErrorMessage(null)
-    //     }, 5000)
-    // }
+    const userMatch = useMatch('/users/:id')
+    const userToDisplay = userMatch
+        ? users.find( u => u.id === userMatch.params.id)
+        : null
 
-    const blogFormRef = useRef()
+    const blogMatch = useMatch('/blogs/:id')
+    const blogToDisplay = blogMatch
+        ? blogs.find( b => b.id === blogMatch.params.id)
+        : null
 
     return (
         <div>
             <h1>Blogs</h1>
 
             <Notification message={notification.message} messageType={notification.type} />
-
+            <NavBar />
             {user !== null && (
                 <div>
                     logged in as: {user.username}
                     <button onClick={handleLogout}>logout</button>
                 </div>
             )}
+
             {user === null && (
                 <Togglable buttonLabel="login">
                     <LoginForm />
                 </Togglable>
             )}
+            <Routes>
+                <Route path='/' element={<Home user={user} />} />
+                <Route path='/users' element={<Users />} />
+                <Route path='/users/:id' element={ <UserDisplay user={userToDisplay} />} />
+                <Route path='/blogs/:id' element={ <Blog blog={blogToDisplay} />} />
+            </Routes>
 
-            <Blogs />
-            {user !== null && (
-                <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                    <BlogForm toggleForm={toggleBlogForm} />
-                </Togglable>
-            )}
         </div>
     )
 }
