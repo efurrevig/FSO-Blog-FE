@@ -1,13 +1,27 @@
-import { useState } from 'react'
 import BlogButton from './BlogButton'
+import { useDispatch } from 'react-redux'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { useNavigate } from 'react-router-dom'
+import CommentForm from './CommentForm'
 
-const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
-    const [visible, setVisible] = useState(false)
+const Blog = ({ blog }) => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const showWhenVisible = { display: visible ? '' : 'none' }
+    const handleLikeSubmit = (blog) => {
+        console.log('liked')
+        dispatch(likeBlog(blog))
+    }
 
-    const toggleVisibility = () => {
-        setVisible(!visible)
+    const handleDeleteBlog = (blog) => {
+        console.log('deleted')
+        if (!window.confirm(
+            `Are you sure you want to delete ${blog.title}?`
+        )) {
+            return
+        }
+        dispatch(deleteBlog(blog.id))
+        navigate('/')
     }
 
     const blogStyle = {
@@ -19,15 +33,18 @@ const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
         maxWidth: 500,
     }
 
+    if (!blog) {
+        return (
+            <div>loading...</div>
+        )
+    }
+
     return (
         <div className="blog" style={blogStyle}>
             <div>
                 {blog.title}
-                <button onClick={toggleVisibility} className="toggleButton">
-                    {visible ? 'hide' : 'show'}
-                </button>
-            </div>
-            <div style={showWhenVisible} className="toggledBlogContent">
+
+
                 <p>Author: {blog.author}</p>
                 <p>URL: {blog.url}</p>
                 <p>
@@ -44,6 +61,15 @@ const Blog = ({ blog, handleLikeSubmit, handleDeleteBlog }) => {
                         handleSubmit={() => handleDeleteBlog(blog)}
                     />
                 </div>
+
+                <h3>Comments</h3>
+                <CommentForm blog={blog} />
+
+                <ul>
+                    {blog.comments.map((c) => (
+                        <li key={c.id}>{c.content}</li>
+                    ))}
+                </ul>
             </div>
         </div>
     )
