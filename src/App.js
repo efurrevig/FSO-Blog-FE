@@ -64,10 +64,9 @@ const App = () => {
     return (
         <Container>
             <div>
-                <h1>Blogs</h1>
-
-                <Notification message={notification.message} messageType={notification.type} />
                 <NavBar />
+                <Notification message={notification.message} messageType={notification.type} />
+                <h1>Blogs</h1>
                 {user !== null && (
                     <div>
                         logged in as: {user.username}
