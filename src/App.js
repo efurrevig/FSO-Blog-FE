@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logoutUser } from './reducers/userReducer'
 import { initializeUserArray } from './reducers/usersReducer'
+import { Container } from '@mui/material'
 import {
     Routes,
     Route,
@@ -61,31 +62,33 @@ const App = () => {
         : null
 
     return (
-        <div>
-            <h1>Blogs</h1>
+        <Container>
+            <div>
+                <h1>Blogs</h1>
 
-            <Notification message={notification.message} messageType={notification.type} />
-            <NavBar />
-            {user !== null && (
-                <div>
-                    logged in as: {user.username}
-                    <button onClick={handleLogout}>logout</button>
-                </div>
-            )}
+                <Notification message={notification.message} messageType={notification.type} />
+                <NavBar />
+                {user !== null && (
+                    <div>
+                        logged in as: {user.username}
+                        <button onClick={handleLogout}>logout</button>
+                    </div>
+                )}
 
-            {user === null && (
-                <Togglable buttonLabel="login">
-                    <LoginForm />
-                </Togglable>
-            )}
-            <Routes>
-                <Route path='/' element={<Home user={user} />} />
-                <Route path='/users' element={<Users />} />
-                <Route path='/users/:id' element={ <UserDisplay user={userToDisplay} />} />
-                <Route path='/blogs/:id' element={ <Blog blog={blogToDisplay} />} />
-            </Routes>
+                {user === null && (
+                    <Togglable buttonLabel="login">
+                        <LoginForm />
+                    </Togglable>
+                )}
+                <Routes>
+                    <Route path='/' element={<Home user={user} />} />
+                    <Route path='/users' element={<Users />} />
+                    <Route path='/users/:id' element={ <UserDisplay user={userToDisplay} />} />
+                    <Route path='/blogs/:id' element={ <Blog blog={blogToDisplay} />} />
+                </Routes>
 
-        </div>
+            </div>
+        </Container>
     )
 }
 
